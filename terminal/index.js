@@ -239,8 +239,9 @@ program
           .then(() => {
               return readFile();
           }).then((data) =>{
-              console.log(JSON.parse(data));
+              
               let obj = JSON.parse(data);
+              
               obj.todos.forEach((el, i) =>{
                   console.log(`_${i+1}__________________________________________________________________________________`);
                   for(key in el){
