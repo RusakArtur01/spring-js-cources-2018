@@ -243,7 +243,9 @@ program
               let obj = JSON.parse(data);
               obj.todos.forEach((el, i) =>{
                   console.log(`_${i+1}__________________________________________________________________________________`);
-                  console.log(` id: ${el.id} \n Title: ${el.title} \n description: ${el.description}`);
+                  for(key in el){
+                      console.log(` ${key}: ${el[key]}`);
+                  }
               });
           });
   });
