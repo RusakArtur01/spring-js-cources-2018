@@ -235,7 +235,17 @@ program
   .alias('ls')
   .description('List all TODOs')
   .action(() => {
-    // TODO write todos list to the cli
+      return openFile()
+          .then(() => {
+              return readFile();
+          }).then((data) =>{
+              console.log(JSON.parse(data));
+              let obj = JSON.parse(data);
+              obj.todos.forEach((el, i) =>{
+                  console.log(`_${i+1}__________________________________________________________________________________`);
+                  console.log(` id: ${el.id} \n Title: ${el.title} \n description: ${el.description}`);
+              });
+          });
   });
 
 program
