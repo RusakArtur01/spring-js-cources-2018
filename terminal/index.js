@@ -25,12 +25,21 @@ function openFile() {
 }
 
 function readFile() {
-  return new Promise((resolve, reject) => {
-    fs.readFile(storagePath, 'utf8', (err, data) => {
-      if (err) {
-        reject(err);
-        return;
-      }
+    return new Promise((resolve, reject) => {
+        fs.readFile(storagePath, 'utf8', (err, data) => {
+            if (err) {
+                reject(err);
+                return;
+            }
+            // check is document has data, will set the data
+            if(!data){
+                data = {
+                    todos: []
+                };
+                data = JSON.stringify(data);;
+
+                writeFile(data);
+            }
 
       resolve(data);
     });
