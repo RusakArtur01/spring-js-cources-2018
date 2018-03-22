@@ -196,12 +196,39 @@ program
     });
 
 program
-  .command('remove <id>')
-  .alias('rm')
-  .description('Remove TODO item by id')
-  .action((id) => {
-    // TODO remove item
-  });
+    .command('remove <id>')
+    .alias('rm')
+    .description('Remove TODO item by id')
+    .action((id) => {
+
+        let getId = parseInt(id, 10);
+
+        return openFile()
+            .then((fd) => {
+                return readFile();
+            })
+            .then((data) => {
+                return JSON.parse(data);
+            })
+            .then((obj) => {
+
+                //get new array without unnecessary element
+                obj.todos = obj.todos.filter((el) => {
+                    return getId != el.id;
+                });
+
+                return obj;
+            })
+            .then((updatedObj) => {
+                return JSON.stringify(updatedObj);
+            })
+            .then((data) => {
+                writeFile(data);
+            })
+            .catch((error) => {
+                console.error(`error: ${error}`);
+            });
+    });
 
 program
   .command('list')
