@@ -151,6 +151,8 @@ program
     .description('Update TODO item')
     .action((id) => {
         let getId = id;
+        let answers;
+
         prompt(updateQuestions).then(updatedAnswers => {
             answers = updatedAnswers;
             return openFile().then()
@@ -264,8 +266,37 @@ program
   .alias('cmt')
   .description('Comment TODO item')
   .action((id) => {
-    prompt(commentQuestions).then(answers => {
-      // TODO comment for todo item
+
+      let comment;
+      let getId = parseInt(id,10);
+
+      prompt(commentQuestions).then(userComment => {
+
+          comment = userComment;
+          return openFile();
+      })
+          .then((fd) => {
+              return readFile();
+          })
+          .then((data) => {
+              return JSON.parse(data);
+          })
+          .then((obj) => {
+              obj.todos.find(el => {
+                  if(el.id == getId){
+                      el.comment = comment.comment;
+                  }
+              });
+              return obj;
+          })
+          .then((updatedObj) => {
+              return JSON.stringify(updatedObj);
+          })
+          .then((data) => {
+              writeFile(data);
+          })
+          .catch((error) => {
+              console.error(`error: ${error}`);
     });
   });
 
