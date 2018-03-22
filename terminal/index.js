@@ -146,14 +146,54 @@ program
   });
 
 program
-  .command('update <id>')
-  .alias('upd')
-  .description('Update TODO item')
-  .action((id) => {
-    prompt(updateQuestions).then(answers => {
-      // TODO update todo
+    .command('update <id>')
+    .alias('upd')
+    .description('Update TODO item')
+    .action((id) => {
+        let getId = id;
+        prompt(updateQuestions).then(updatedAnswers => {
+            answers = updatedAnswers;
+            return openFile().then()
+        })
+            .then((fd) => {
+                return readFile();
+            })
+            .then((data) => {
+                return JSON.parse(data);
+            })
+            .then((obj) => {
+
+                var flag = false;// boolean for add new task
+                // check is array has element with current id
+                obj.todos.find(el => {
+                    if(el.id == getId){
+                        flag = true;
+                        el.title = answers.title;
+                        el.description = answers.description;
+                    }
+                });
+
+                //if array haven't element with current id, we will add new task
+                if(!flag){
+                    obj.todos.push({
+                        id: guid(),
+                        title: answers.title,
+                        description: answers.description,
+                    });
+                }
+
+                return obj;
+            })
+            .then((updatedObj) => {
+                return JSON.stringify(updatedObj);
+            })
+            .then((data) => {
+                writeFile(data);
+            })
+            .catch((error) => {
+                console.error(`error: ${error}`);
+            });
     });
-  });
 
 program
   .command('remove <id>')
