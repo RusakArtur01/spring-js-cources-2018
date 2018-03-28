@@ -11,6 +11,39 @@ program
 
 const storagePath = path.resolve('./store.json');
 
+// Craft questions to present to users
+const createQuestions = [
+    {
+        type: 'input',
+        name: 'title',
+        message: 'Enter title ...'
+    },
+    {
+        type: 'input',
+        name: 'description',
+        message: 'Enter description ...'
+    },
+];
+const updateQuestions = [
+    {
+        type: 'input',
+        name: 'title',
+        message: 'Enter new title ...'
+    },
+    {
+        type: 'input',
+        name: 'description',
+        message: 'Enter new description ...'
+    },
+];
+const commentQuestions = [
+    {
+        type: 'input',
+        name: 'comment',
+        message: 'Enter comment ...'
+    },
+];
+
 
 function openFile() {
     return new Promise((resolve, reject) => {
@@ -57,7 +90,7 @@ function writeFile(data) {
     });
 }
 
-function guid() {
+function randomId() {
     function s4() {
         // return Math.floor((1 + Math.random()) * 0x10000)
         //   .toString(16)
@@ -72,43 +105,15 @@ function guid() {
     //return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
 }
 
-// Craft questions to present to users
-const createQuestions = [
-    {
-        type: 'input',
-        name: 'title',
-        message: 'Enter title ...'
-    },
-    {
-        type: 'input',
-        name: 'description',
-        message: 'Enter description ...'
-    },
-];
-const updateQuestions = [
-    {
-        type: 'input',
-        name: 'title',
-        message: 'Enter new title ...'
-    },
-    {
-        type: 'input',
-        name: 'description',
-        message: 'Enter new description ...'
-    },
-];
-const commentQuestions = [
-    {
-        type: 'input',
-        name: 'comment',
-        message: 'Enter comment ...'
-    },
-];
+function saveTodoList(obj){
+    return writeFile(JSON.stringify(obj));
+}
 
-function startWork() {
-    return openFile().then(() => {
-        return readFile();
-    })
+function getParseObjJson() {
+    return openFile()
+        .then(() => {
+            return readFile();
+        })
         .then((data) => {
             return JSON.parse(data);
         });
@@ -119,25 +124,20 @@ program
     .alias('cr')
     .description('Create new TODO item')
     .action(() => {
+
         let answers;
 
         prompt(createQuestions)
             .then((receivedAnswers) => {
                 answers = receivedAnswers;
-                return startWork()
+                return getParseObjJson()
                     .then((obj) => {
                         obj.todos.push({
-                            id: guid(),
+                            id: randomId(),
                             title: answers.title,
                             description: answers.description,
                         });
-                        return obj;
-                    })
-                    .then((updatedObj) => {
-                        return JSON.stringify(updatedObj);
-                    })
-                    .then((data) => {
-                        writeFile(data);
+                        return saveTodoList(obj);
                     })
                     .catch((error) => {
                         console.error(`error: ${error}`);
@@ -150,12 +150,13 @@ program
     .alias('upd')
     .description('Update TODO item')
     .action((id) => {
+
         let getId = id;
         let answers;
 
         prompt(updateQuestions).then(updatedAnswers => {
             answers = updatedAnswers;
-            return startWork()
+            return getParseObjJson()
                 .then((obj) => {
 
                     var flag = false;// boolean for add new task
@@ -171,24 +172,18 @@ program
                     //if array haven't element with current id, we will add new task
                     if (!flag) {
                         obj.todos.push({
-                            id: guid(),
+                            id: randomId(),
                             title: answers.title,
                             description: answers.description,
                         });
                     }
 
-                    return obj;
+                    return saveTodoList(obj);
                 })
-        })
-            .then((updatedObj) => {
-                return JSON.stringify(updatedObj);
-            })
-            .then((data) => {
-                writeFile(data);
-            })
-            .catch((error) => {
-                console.error(`error: ${error}`);
-            });
+                .catch((error) => {
+                    console.error(`error: ${error}`);
+                });
+        });
     });
 
 program
@@ -199,7 +194,7 @@ program
 
         let getId = parseInt(id, 10);
 
-        return startWork()
+        return getParseObjJson()
             .then((obj) => {
 
                 //get new array without unnecessary element
@@ -207,13 +202,7 @@ program
                     return getId != el.id;
                 });
 
-                return obj;
-            })
-            .then((updatedObj) => {
-                return JSON.stringify(updatedObj);
-            })
-            .then((data) => {
-                writeFile(data);
+                return saveTodoList(obj);
             })
             .catch((error) => {
                 console.error(`error: ${error}`);
@@ -225,7 +214,7 @@ program
     .alias('ls')
     .description('List all TODOs')
     .action(() => {
-        return startWork()
+        return getParseObjJson()
             .then((obj) => {
                 obj.todos.forEach((el, i) => {
                     console.log(`_${i + 1}__________________________________________________________________________________`);
@@ -256,20 +245,14 @@ program
         prompt(commentQuestions).then(userComment => {
 
             comment = userComment;
-            return startWork()
+            return getParseObjJson()
                 .then((obj) => {
                     obj.todos.find(el => {
                         if (el.id == getId) {
                             el.comment = comment.comment;
                         }
                     });
-                    return obj;
-                })
-                .then((updatedObj) => {
-                    return JSON.stringify(updatedObj);
-                })
-                .then((data) => {
-                    writeFile(data);
+                    return saveTodoList(obj);
                 })
                 .catch((error) => {
                     console.error(`error: ${error}`);
