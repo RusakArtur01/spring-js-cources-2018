@@ -9,7 +9,10 @@ program
     .version('0.0.1')
     .description('TODO app');
 
-const storagePath = path.resolve('./store.json');
+const STORAGE_PATH = path.resolve('./store.json');
+const { O_APPEND, O_RDONLY, O_CREAT } = fs.constants;
+const USER_ID = 1;
+
 
 // Craft questions to present to users
 const createQuestions = [
@@ -44,23 +47,39 @@ const commentQuestions = [
     },
 ];
 
+function createToDoTask(answers) {
+
+    console.log(answers.title + " => test 3 get for create TODO");
+    return {
+        id: randomId(),
+        title: answers.title,
+        description: answers.description
+    }
+}
+
+function updateToDoList(currentToDO, obj) {
+    return [...obj, currentToDO];
+}
+
+function findToDoIndex(todos, id) {
+    return todos.findIndex(() => {todos.id == id});
+}
 
 function openFile() {
     return new Promise((resolve, reject) => {
-        fs.open(storagePath, 'a+', (err, fd) => {
+        fs.open(STORAGE_PATH, 'a+', (err, fd) => {
             if (err) {
                 reject(err);
                 return;
             }
-
-            resolve(fd);
+            resolve();
         });
     });
 }
 
 function readFile() {
     return new Promise((resolve, reject) => {
-        fs.readFile(storagePath, 'utf8', (err, data) => {
+        fs.readFile(STORAGE_PATH, 'utf8', (err, data) => {
             if (err) {
                 reject(err);
                 return;
@@ -69,7 +88,6 @@ function readFile() {
             if (!data) {
                 data = {todos: []};
                 data = JSON.stringify(data);
-
                 writeFile(data);
             }
 
@@ -80,7 +98,7 @@ function readFile() {
 
 function writeFile(data) {
     return new Promise((resolve, reject) => {
-        fs.writeFile(storagePath, data, (err) => {
+        fs.writeFile(STORAGE_PATH, data, (err) => {
             if (err) {
                 reject(err);
                 return;
@@ -115,6 +133,7 @@ function getParseObjJson() {
             return readFile();
         })
         .then((data) => {
+            console.log(data + ' => test1 parsing');
             return JSON.parse(data);
         });
 }
@@ -130,18 +149,17 @@ program
         prompt(createQuestions)
             .then((receivedAnswers) => {
                 answers = receivedAnswers;
-                return getParseObjJson()
-                    .then((obj) => {
-                        obj.todos.push({
-                            id: randomId(),
-                            title: answers.title,
-                            description: answers.description,
-                        });
-                        return saveTodoList(obj);
-                    })
-                    .catch((error) => {
-                        console.error(`error: ${error}`);
-                    });
+                return getParseObjJson();
+            })
+            .then((obj) => {
+                console.log(obj + ' => test 4 get elements');
+                let currentToDo = createToDoTask(answers);
+                let updateToDoList = updateToDoList(currentToDo, obj);
+                return saveTodoList(updateToDoList).then(() => currentToDo.id);
+            })
+            .then((id) => console.info(`Element with ID ${id} was added.`))
+            .catch((error) => {
+                console.error(`error: ${error}`);
             });
     });
 
@@ -230,7 +248,20 @@ program
     .alias('lk')
     .description('Like TODO item')
     .action((id) => {
-        // TODO mark todo item as liked
+
+        let getId = parseInt(id, 10);
+        return getParseObjJson()
+            .then((obj) => {
+                obj.todos.find(el => {
+                    if (el.id == getId) {
+                        el.liked = 'true';
+                    }
+                });
+                return saveTodoList(obj);
+            })
+            .catch((error) => {
+                console.error(`error: ${error}`);
+            });
     });
 
 program
