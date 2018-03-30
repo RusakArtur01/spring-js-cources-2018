@@ -47,17 +47,24 @@ const commentQuestions = [
     },
 ];
 
-function createToDoTask(answers) {
+function createToDo(answers) {
 
     console.log(answers.title + " => test 3 get for create TODO");
+
+    let now = new Date();
+
     return {
         id: randomId(),
+        createdByUserId: USER_ID,
+        updatedByUserId: USER_ID,
+        createdDate: now,
+        updatedDate: now,
         title: answers.title,
         description: answers.description
     }
 }
 
-function updateToDoList(currentToDO, obj) {
+function updateToDo(currentToDO, obj) {
     return [...obj, currentToDO];
 }
 
@@ -131,11 +138,16 @@ function getParseObjJson() {
     return openFile()
         .then(() => {
             return readFile();
-        })
-        .then((data) => {
-            console.log(data + ' => test1 parsing');
-            return JSON.parse(data);
         });
+}
+
+function padrseData(data) {
+    console.log(data + ' => test1 parsing');
+    return JSON.parse(data);
+}
+
+function print(obj) {
+    console.info(obj);
 }
 
 program
@@ -151,11 +163,13 @@ program
                 answers = receivedAnswers;
                 return getParseObjJson();
             })
+            .then(padrseData)
             .then((obj) => {
-                console.log(obj + ' => test 4 get elements');
-                let currentToDo = createToDoTask(answers);
-                let updateToDoList = updateToDoList(currentToDo, obj);
-                return saveTodoList(updateToDoList).then(() => currentToDo.id);
+
+                let currentToDo = createToDo(answers);
+                let updatedToDoList = updateToDo(currentToDo, obj);
+
+                return saveTodoList(updatedToDoList).then(() => currentToDo.id);
             })
             .then((id) => console.info(`Element with ID ${id} was added.`))
             .catch((error) => {
@@ -232,15 +246,8 @@ program
     .alias('ls')
     .description('List all TODOs')
     .action(() => {
-        return getParseObjJson()
-            .then((obj) => {
-                obj.todos.forEach((el, i) => {
-                    console.log(`_${i + 1}__________________________________________________________________________________`);
-                    for (key in el) {
-                        console.log(` ${key}: ${el[key]}`);
-                    }
-                });
-            });
+        getParseObjJson()
+            .then(print);
     });
 
 program
