@@ -60,7 +60,8 @@ function createToDo(objAnswers) {
         lastUpdatedDate: now,
         title: objAnswers.title,
         description: objAnswers.description,
-        comment: null
+        comment: null,
+        liked: false
     }
 }
 
@@ -224,7 +225,7 @@ program
                 let isObjectIndex = findToDoIndex(objData,id);
 
                 if(isObjectIndex === false){
-                    return message
+                    return message;
                 }
 
                 let updatedToDo = UpdateTargetToDo(objData[isObjectIndex], answers);
@@ -233,7 +234,7 @@ program
                 result.splice(isObjectIndex, 1, updatedToDo);
                 saveTodoList(result);
 
-                return `The TODO, which have ID: ${id} was updated!!!`;
+                return `The TODO, which has ID: ${id} was updated!!!`;
             })
             .then(print)
             .catch((e) => {
@@ -256,7 +257,7 @@ program
                 let isObjectIndex = findToDoIndex(objData, id);
 
                 if (isObjectIndex === false) {
-                    return message
+                    return message;
                 }
                 let result = [...objData];
 
@@ -299,7 +300,7 @@ program
             //check data is message
                 let isObjectIndex = findToDoIndex(objData,id);
                 if(isObjectIndex === false){
-                    return message
+                    return message;
                 }
                 return stringifyData(objData[isObjectIndex]);
             })
@@ -315,18 +316,29 @@ program
     .description('Like TODO item')
     .action((id) => {
 
-        let getId = parseInt(id, 10);
-        return getParseObjJson()
-            .then((obj) => {
-                obj.todos.find(el => {
-                    if (el.id == getId) {
-                        el.liked = 'true';
-                    }
-                });
-                return saveTodoList(obj);
+        let message = `Liking was stopped, TODO item not found!!!`;
+
+        return getObjJson()
+            .then(padrseData)
+            .then((objData) => {
+
+                let isObjectIndex = findToDoIndex(objData, id);
+
+                if (isObjectIndex === false) {
+                    return message;
+                }
+
+                let updatedToDo = UpdateTargetToDo(objData[isObjectIndex], {liked: true});
+                let result = [...objData];
+
+                result.splice(isObjectIndex, 1, updatedToDo);
+                saveTodoList(result);
+
+                return `The TODO, which has ID: ${id} was Liked!!!`;
             })
-            .catch((error) => {
-                console.error(`error: ${error}`);
+            .then(print)
+            .catch((e) => {
+                throw e;
             });
     });
 
