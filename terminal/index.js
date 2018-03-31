@@ -223,7 +223,7 @@ program
 
                 let isObjectIndex = findToDoIndex(objData,id);
 
-                if(!isObjectIndex){
+                if(isObjectIndex === false){
                     return message
                 }
 
@@ -247,20 +247,27 @@ program
     .description('Remove TODO item by id')
     .action((id) => {
 
-        let getId = parseInt(id, 10);
+        let message = `Removing was stopped, TODO item not found!!!`;
 
-        return getParseObjJson()
-            .then((obj) => {
+        return getObjJson()
+            .then(padrseData)
+            .then((objData) => {
 
-                //get new array without unnecessary element
-                obj.todos = obj.todos.filter((el) => {
-                    return getId != el.id;
-                });
+                let isObjectIndex = findToDoIndex(objData, id);
 
-                return saveTodoList(obj);
+                if (isObjectIndex === false) {
+                    return message
+                }
+                let result = [...objData];
+
+                let removedItem = result.splice(isObjectIndex, 1);
+                saveTodoList(result);
+
+                return `Removed count: ${removedItem.length}`;
             })
-            .catch((error) => {
-                console.error(`error: ${error}`);
+            .then(print)
+            .catch((e) => {
+                throw e;
             });
     });
 
@@ -291,7 +298,7 @@ program
             .then((objData) => {
             //check data is message
                 let isObjectIndex = findToDoIndex(objData,id);
-                if(!isObjectIndex){
+                if(isObjectIndex === false){
                     return message
                 }
                 return stringifyData(objData[isObjectIndex]);
