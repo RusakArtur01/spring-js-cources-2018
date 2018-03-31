@@ -380,25 +380,34 @@ program
     .description('Comment TODO item')
     .action((id) => {
 
-        let comment;
-        let getId = parseInt(id, 10);
+        let message = `Commenting was stopped, TODO item not found!!!`;
+        let answers;
 
-        prompt(commentQuestions).then(userComment => {
+        prompt(commentQuestions).then(updatedAnswers => {
+            answers = updatedAnswers;
+            return getObjJson();
+        })
+            .then(padrseData)
+            .then((objData) => {
 
-            comment = userComment;
-            return getParseObjJson()
-                .then((obj) => {
-                    obj.todos.find(el => {
-                        if (el.id == getId) {
-                            el.comment = comment.comment;
-                        }
-                    });
-                    return saveTodoList(obj);
-                })
-                .catch((error) => {
-                    console.error(`error: ${error}`);
-                });
-        });
+                let isObjectIndex = findToDoIndex(objData, id);
+
+                if (isObjectIndex === false) {
+                    return message;
+                }
+
+                let updatedToDo = UpdateTargetToDo(objData[isObjectIndex], answers);
+                let result = [...objData];
+
+                result.splice(isObjectIndex, 1, updatedToDo);
+                saveTodoList(result);
+
+                return `The TODO, which has ID: ${id} was commented!!!`;
+            })
+            .then(print)
+            .catch((e) => {
+                throw e;
+            });
     });
 
 program.parse(process.argv);
