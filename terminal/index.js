@@ -50,39 +50,44 @@ const commentQuestions = [
 //creating item info
 function createToDo(objAnswers) {
 
-    console.log(objAnswers.title + " => test 3 get for create TODO");
-
     let now = new Date();
 
     return {
         id: randomId(),
         createdByUserId: USER_ID,
-        updatedByUserId: USER_ID,
+        lastUpdatedByUserId: USER_ID,
         createdDate: now,
-        updatedDate: now,
+        lastUpdatedDate: now,
         title: objAnswers.title,
-        description: objAnswers.description
+        description: objAnswers.description,
+        comment: null
     }
 }
 
-//find target todoitem
-function findTargetToDo(objData, id, message) {
-
-    let index = findToDoIndex(objData, id);
-    if(index === -1){
-        return message;
+function UpdateTargetToDo(targetData, changes) {
+    return{
+        ...targetData,
+        ...changes,
+        lastUpdatedByUserId: USER_ID,
+        lastUpdatedDate: new Date(),
+        createdDate: targetData.createdDate,
+        createdByUserId: targetData.createdByUserId
     }
-    return objData[index];
 }
 
 //add a todoitem in list
-function updateToDo(currentToDO, obj) {
+function updateToDoList(currentToDO, obj) {
     return [...obj, currentToDO];
 }
 
 //find the index for target id
 function findToDoIndex(todos, id) {
-    return todos.findIndex((currentToDo) => currentToDo.id === id);
+
+    let index = todos.findIndex((currentToDo) => currentToDo.id === id);
+    if(index === -1){
+        return false;
+    }
+    return index;
 }
 
 //opening file, if file doesn't exist, it will be created
@@ -189,9 +194,9 @@ program
             .then((obj) => {
 
                 let currentToDo = createToDo(answers);
-                let updatedToDoList = updateToDo(currentToDo, obj);
+                let updatedToDo = updateToDoList(currentToDo, obj);
 
-                return saveTodoList(updatedToDoList).then(() => currentToDo.id);
+                return saveTodoList(updatedToDo).then(() => currentToDo.id);
             })
             .then((id) => console.info(`Element with ID ${id} was added.`))
             .catch((e) => {
@@ -205,25 +210,35 @@ program
     .description('Update TODO item')
     .action((id) => {
 
-        let getId = id;
+        let message = `Update was stopped, TODO item not found!!!`;
         let answers;
 
-        prompt(updateQuestions).then(updatedAnswers => {
-            answers = updatedAnswers;
-            return getObjJson();
-        })
-        .then(padrseData)
-        .then((obj) => {
+        prompt(updateQuestions)
+            .then(updatedAnswers => {
+                answers = updatedAnswers;
+                return getObjJson();
+            })
+            .then(padrseData)
+            .then((objData)=> {
 
-            let currentToDo = createToDo(answers);
-            let updatedToDoList = updateToDo(currentToDo, obj);
+                let isObjectIndex = findToDoIndex(objData,id);
 
-            return saveTodoList(updatedToDoList).then(() => currentToDo.id);
-        })
-        .then((id) => console.info(`Element with ID ${id} was added.`))
-        .catch((e) => {
-            throw e;
-        });
+                if(!isObjectIndex){
+                    return message
+                }
+
+                let updatedToDo = UpdateTargetToDo(objData[isObjectIndex], answers);
+                let result = [...objData];
+
+                result.splice(isObjectIndex, 1, updatedToDo);
+                saveTodoList(result);
+
+                return `The TODO, which have ID: ${id} was updated!!!`;
+            })
+            .then(print)
+            .catch((e) => {
+                throw e;
+            });
     });
 
 program
@@ -249,7 +264,7 @@ program
             });
     });
 
-//ready
+//print todos list
 program
     .command('list')
     .alias('ls')
@@ -261,7 +276,8 @@ program
                 throw e;
             });
     });
-//ready
+
+//pring target todoelement
 program
     .command('read <id>')
     .alias('rd')
@@ -272,13 +288,13 @@ program
 
         getObjJson()
             .then(padrseData)
-            .then((objData) => findTargetToDo(objData, id, message))
-            .then((info) => {
+            .then((objData) => {
             //check data is message
-                if(typeof info == "string"){
-                    return info;
+                let isObjectIndex = findToDoIndex(objData,id);
+                if(!isObjectIndex){
+                    return message
                 }
-                return stringifyData(info);
+                return stringifyData(objData[isObjectIndex]);
             })
             .then(print)
             .catch((e) => {
