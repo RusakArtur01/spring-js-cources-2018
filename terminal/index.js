@@ -343,6 +343,38 @@ program
     });
 
 program
+    .command('unlike <id>')
+    .alias('unlk')
+    .description('Like TODO item')
+    .action((id) => {
+
+        let message = `Unliking was stopped, TODO item not found!!!`;
+
+        return getObjJson()
+            .then(padrseData)
+            .then((objData) => {
+
+                let isObjectIndex = findToDoIndex(objData, id);
+
+                if (isObjectIndex === false) {
+                    return message;
+                }
+
+                let updatedToDo = UpdateTargetToDo(objData[isObjectIndex], {liked: false});
+                let result = [...objData];
+
+                result.splice(isObjectIndex, 1, updatedToDo);
+                saveTodoList(result);
+
+                return `The TODO, which has ID: ${id} was Unliked!!!`;
+            })
+            .then(print)
+            .catch((e) => {
+                throw e;
+            });
+    });
+
+program
     .command('comment <id>')
     .alias('cmt')
     .description('Comment TODO item')
