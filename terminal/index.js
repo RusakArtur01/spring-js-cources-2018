@@ -47,9 +47,10 @@ const commentQuestions = [
     },
 ];
 
-function createToDo(answers) {
+//creating item info
+function createToDo(objAnswers) {
 
-    console.log(answers.title + " => test 3 get for create TODO");
+    console.log(objAnswers.title + " => test 3 get for create TODO");
 
     let now = new Date();
 
@@ -59,19 +60,32 @@ function createToDo(answers) {
         updatedByUserId: USER_ID,
         createdDate: now,
         updatedDate: now,
-        title: answers.title,
-        description: answers.description
+        title: objAnswers.title,
+        description: objAnswers.description
     }
 }
 
+//find target todoitem
+function findTargetToDo(objData, id, message) {
+
+    let index = findToDoIndex(objData, id);
+    if(index === -1){
+        return message;
+    }
+    return objData[index];
+}
+
+//add a todoitem in list
 function updateToDo(currentToDO, obj) {
     return [...obj, currentToDO];
 }
 
+//find the index for target id
 function findToDoIndex(todos, id) {
-    return todos.findIndex(() => {todos.id == id});
+    return todos.findIndex((currentToDo) => currentToDo.id === id);
 }
 
+//opening file, if file doesn't exist, it will be created
 function openFile() {
     return new Promise((resolve, reject) => {
         fs.open(STORAGE_PATH, 'a+', (err, fd) => {
@@ -84,6 +98,7 @@ function openFile() {
     });
 }
 
+//reading file
 function readFile() {
     return new Promise((resolve, reject) => {
         fs.readFile(STORAGE_PATH, 'utf8', (err, data) => {
@@ -103,6 +118,7 @@ function readFile() {
     });
 }
 
+//adding changes in file
 function writeFile(data) {
     return new Promise((resolve, reject) => {
         fs.writeFile(STORAGE_PATH, data, (err) => {
@@ -115,41 +131,47 @@ function writeFile(data) {
     });
 }
 
+//generation random id
 function randomId() {
     function s4() {
-        // return Math.floor((1 + Math.random()) * 0x10000)
-        //   .toString(16)
-        //   .substring(1);
-        //--------------------------------------------
-        // for testing we will use simple id.
-        return Math.floor(Math.random() * (20 - 1) + 1);
-
+        return Math.floor((1 + Math.random()) * 0x10000)
+          .toString(16)
+          .substring(1);
     }
 
     return s4();
     //return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
 }
 
+//saving todolist ( making json)
 function saveTodoList(obj){
     return writeFile(JSON.stringify(obj));
 }
 
-function getParseObjJson() {
+//getting json obj
+function getObjJson() {
     return openFile()
         .then(() => {
             return readFile();
         });
 }
 
-function padrseData(data) {
-    console.log(data + ' => test1 parsing');
-    return JSON.parse(data);
+//parse data to obj
+function padrseData(jsonData) {
+    return JSON.parse(jsonData);
 }
 
+//parse data to json
+function stringifyData(objData) {
+    return JSON.stringify(objData);
+}
+
+//print information in console
 function print(obj) {
     console.info(obj);
 }
 
+//ready
 program
     .command('create')
     .alias('cr')
@@ -161,7 +183,7 @@ program
         prompt(createQuestions)
             .then((receivedAnswers) => {
                 answers = receivedAnswers;
-                return getParseObjJson();
+                return getObjJson();
             })
             .then(padrseData)
             .then((obj) => {
@@ -172,8 +194,8 @@ program
                 return saveTodoList(updatedToDoList).then(() => currentToDo.id);
             })
             .then((id) => console.info(`Element with ID ${id} was added.`))
-            .catch((error) => {
-                console.error(`error: ${error}`);
+            .catch((e) => {
+                throw e;
             });
     });
 
@@ -188,33 +210,19 @@ program
 
         prompt(updateQuestions).then(updatedAnswers => {
             answers = updatedAnswers;
-            return getParseObjJson()
-                .then((obj) => {
+            return getObjJson();
+        })
+        .then(padrseData)
+        .then((obj) => {
 
-                    var flag = false;// boolean for add new task
-                    // check is array has element with current id
-                    obj.todos.find(el => {
-                        if (el.id == getId) {
-                            flag = true;
-                            el.title = answers.title;
-                            el.description = answers.description;
-                        }
-                    });
+            let currentToDo = createToDo(answers);
+            let updatedToDoList = updateToDo(currentToDo, obj);
 
-                    //if array haven't element with current id, we will add new task
-                    if (!flag) {
-                        obj.todos.push({
-                            id: randomId(),
-                            title: answers.title,
-                            description: answers.description,
-                        });
-                    }
-
-                    return saveTodoList(obj);
-                })
-                .catch((error) => {
-                    console.error(`error: ${error}`);
-                });
+            return saveTodoList(updatedToDoList).then(() => currentToDo.id);
+        })
+        .then((id) => console.info(`Element with ID ${id} was added.`))
+        .catch((e) => {
+            throw e;
         });
     });
 
@@ -241,13 +249,41 @@ program
             });
     });
 
+//ready
 program
     .command('list')
     .alias('ls')
     .description('List all TODOs')
     .action(() => {
-        getParseObjJson()
-            .then(print);
+        getObjJson()
+            .then(print)
+            .catch((e) => {
+                throw e;
+            });
+    });
+//ready
+program
+    .command('read <id>')
+    .alias('rd')
+    .description('Read TODO item')
+    .action((id) => {
+
+        let message = `TODO item not found`;
+
+        getObjJson()
+            .then(padrseData)
+            .then((objData) => findTargetToDo(objData, id, message))
+            .then((info) => {
+            //check data is message
+                if(typeof info == "string"){
+                    return info;
+                }
+                return stringifyData(info);
+            })
+            .then(print)
+            .catch((e) => {
+                console.info(e);
+            });
     });
 
 program
