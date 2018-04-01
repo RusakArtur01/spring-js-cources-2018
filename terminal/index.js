@@ -111,7 +111,7 @@ function findToDoIndex(todos, id) {
 //opening file, if file doesn't exist, it will be created
 function openFile() {
     return new Promise((resolve, reject) => {
-        fs.open(STORAGE_PATH, 'a+', (err) => {
+        fs.open(STORAGE_PATH, O_APPEND | O_CREAT, (err) => {
             if (err) {
                 reject(err);
                 return;
@@ -124,7 +124,7 @@ function openFile() {
 //reading file
 function readFile() {
     return new Promise((resolve, reject) => {
-        fs.readFile(STORAGE_PATH, 'utf8', (err, data) => {
+        fs.readFile(STORAGE_PATH, { encoding: 'utf8', flag: O_RDONLY | O_CREAT }, (err, data) => {
             if (err) {
                 reject(err);
                 return;
@@ -160,8 +160,7 @@ function randomId() {
           .substring(1);
     }
 
-    return s4();
-    //return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+   return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
 }
 
 //saving todolist ( making json)
