@@ -1,6 +1,0 @@
--creating DONE
--updating DONE
--LISt DONE
--removing DONE
--reading DONE
-1 fix start obj with TODO
