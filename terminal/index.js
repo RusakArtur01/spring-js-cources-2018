@@ -47,6 +47,13 @@ const commentQuestions = [
     },
 ];
 
+function addNewToDoItem(obj, answers) {
+    let currentToDo = createToDo(answers);
+    let updatedToDo = updateToDoList(currentToDo, obj);
+
+    return saveTodoList(updatedToDo).then(() => currentToDo.id);
+}
+
 //creating item info
 function createToDo(objAnswers) {
 
@@ -65,6 +72,16 @@ function createToDo(objAnswers) {
     }
 }
 
+//common function for updating
+function commonUpdatingItem(objData, index, changes) {
+    let updatedToDo = updateTargetToDo(objData[index], changes);
+    let result = [...objData];
+
+    result.splice(index, 1, updatedToDo);
+    saveTodoList(result);
+}
+
+//updating targettodo
 function updateTargetToDo(targetData, changes) {
     return{
         ...targetData,
@@ -176,6 +193,15 @@ function print(obj) {
     console.info(obj);
 }
 
+//removing item
+function removingToDoItem(objData, index){
+    let result = [...objData];
+
+    let removedItem = result.splice(index, 1);
+    saveTodoList(result);
+    return removedItem;
+}
+
 //ready
 program
     .command('create')
@@ -191,13 +217,8 @@ program
                 return getObjJson();
             })
             .then(padrseData)
-            .then((obj) => {
-                let currentToDo = createToDo(answers);
-                let updatedToDo = updateToDoList(currentToDo, obj);
-
-                return saveTodoList(updatedToDo).then(() => currentToDo.id);
-            })
-            .then((id) => console.info(`Element with ID ${id} was added.`))
+            .then((obj) => addNewToDoItem(obj, answers))
+            .then((id) => console.info(`TODO item with ID ${id} was added.`))
             .catch((e) => {
                 throw e;
             });
@@ -226,11 +247,7 @@ program
                     return message;
                 }
 
-                let updatedToDo = updateTargetToDo(objData[isObjectIndex], answers);
-                let result = [...objData];
-
-                result.splice(isObjectIndex, 1, updatedToDo);
-                saveTodoList(result);
+                commonUpdatingItem(objData, isObjectIndex, answers);
 
                 return `The TODO, which has ID: ${id} was updated!!!`;
             })
@@ -257,12 +274,10 @@ program
                 if (isObjectIndex === false) {
                     return message;
                 }
-                let result = [...objData];
 
-                let removedItem = result.splice(isObjectIndex, 1);
-                saveTodoList(result);
+                let removed = removingToDoItem(objData, isObjectIndex);
 
-                return `Removed count: ${removedItem.length}`;
+                return `Removed count: ${removed.length}`;
             })
             .then(print)
             .catch((e) => {
@@ -326,11 +341,7 @@ program
                     return message;
                 }
 
-                let updatedToDo = updateTargetToDo(objData[isObjectIndex], {liked: true});
-                let result = [...objData];
-
-                result.splice(isObjectIndex, 1, updatedToDo);
-                saveTodoList(result);
+                commonUpdatingItem(objData, isObjectIndex,  {liked: true});
 
                 return `The TODO, which has ID: ${id} was Liked!!!`;
             })
@@ -358,11 +369,7 @@ program
                     return message;
                 }
 
-                let updatedToDo = updateTargetToDo(objData[isObjectIndex], {liked: false});
-                let result = [...objData];
-
-                result.splice(isObjectIndex, 1, updatedToDo);
-                saveTodoList(result);
+                commonUpdatingItem(objData, isObjectIndex,  {liked: false});
 
                 return `The TODO, which has ID: ${id} was Unliked!!!`;
             })
@@ -394,11 +401,7 @@ program
                     return message;
                 }
 
-                let updatedToDo = updateTargetToDo(objData[isObjectIndex], answers);
-                let result = [...objData];
-
-                result.splice(isObjectIndex, 1, updatedToDo);
-                saveTodoList(result);
+                commonUpdatingItem(objData, isObjectIndex, answers);
 
                 return `The TODO, which has ID: ${id} was commented!!!`;
             })
