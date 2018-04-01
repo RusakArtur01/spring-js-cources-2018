@@ -94,7 +94,7 @@ function findToDoIndex(todos, id) {
 //opening file, if file doesn't exist, it will be created
 function openFile() {
     return new Promise((resolve, reject) => {
-        fs.open(STORAGE_PATH, 'a+', (err, fd) => {
+        fs.open(STORAGE_PATH, 'a+', (err) => {
             if (err) {
                 reject(err);
                 return;
@@ -116,9 +116,7 @@ function readFile() {
             if (!data) {
                 data = {todos: []};
                 data = JSON.stringify(data);
-                writeFile(data);
             }
-
             resolve(data);
         });
     });
@@ -164,7 +162,8 @@ function getObjJson() {
 
 //parse data to obj
 function padrseData(jsonData) {
-    return JSON.parse(jsonData);
+    let objData = JSON.parse(jsonData);
+    return objData.todos;
 }
 
 //parse data to json
@@ -193,7 +192,6 @@ program
             })
             .then(padrseData)
             .then((obj) => {
-
                 let currentToDo = createToDo(answers);
                 let updatedToDo = updateToDoList(currentToDo, obj);
 
