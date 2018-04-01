@@ -65,7 +65,7 @@ function createToDo(objAnswers) {
     }
 }
 
-function UpdateTargetToDo(targetData, changes) {
+function updateTargetToDo(targetData, changes) {
     return{
         ...targetData,
         ...changes,
@@ -148,8 +148,8 @@ function randomId() {
 }
 
 //saving todolist ( making json)
-function saveTodoList(obj){
-    return writeFile(JSON.stringify(obj));
+function saveTodoList(todos){
+    return writeFile(JSON.stringify({todos}));
 }
 
 //getting json obj
@@ -226,7 +226,7 @@ program
                     return message;
                 }
 
-                let updatedToDo = UpdateTargetToDo(objData[isObjectIndex], answers);
+                let updatedToDo = updateTargetToDo(objData[isObjectIndex], answers);
                 let result = [...objData];
 
                 result.splice(isObjectIndex, 1, updatedToDo);
@@ -326,7 +326,7 @@ program
                     return message;
                 }
 
-                let updatedToDo = UpdateTargetToDo(objData[isObjectIndex], {liked: true});
+                let updatedToDo = updateTargetToDo(objData[isObjectIndex], {liked: true});
                 let result = [...objData];
 
                 result.splice(isObjectIndex, 1, updatedToDo);
@@ -358,7 +358,7 @@ program
                     return message;
                 }
 
-                let updatedToDo = UpdateTargetToDo(objData[isObjectIndex], {liked: false});
+                let updatedToDo = updateTargetToDo(objData[isObjectIndex], {liked: false});
                 let result = [...objData];
 
                 result.splice(isObjectIndex, 1, updatedToDo);
@@ -394,7 +394,7 @@ program
                     return message;
                 }
 
-                let updatedToDo = UpdateTargetToDo(objData[isObjectIndex], answers);
+                let updatedToDo = updateTargetToDo(objData[isObjectIndex], answers);
                 let result = [...objData];
 
                 result.splice(isObjectIndex, 1, updatedToDo);
