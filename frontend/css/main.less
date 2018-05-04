@@ -1,0 +1,111 @@
+@commonBackground: #dadada;
+@blueBackground: #eafaff;
+@wrapperPaddingXL: 0 30px;
+@wrapperPaddingL: 0 20px;
+@wrapperPaddingS: 0 10px;
+@fontFamily: Arial;
+@fontSizeXL: 22px;
+@fontSizeL: 20px;
+@fontSizeS: 18px;
+@fontSizeCommon: 16px;
+@mediaXL: ~"all and (max-width:979px)";
+@mediaL:  ~"all and (max-width:767px)";
+@mediaS:  ~"all and (max-width:512px)";
+
+//
+
+.header-container__title,
+.footer-container__title{
+  font-size: 28px;
+  font-family: @fontFamily;
+  font-weight: bold;
+  color: #fff;
+}
+
+.add-item-component{
+  border: 2px solid #dadada;
+  border-radius: 5px;
+  padding: 10px;
+
+  form{
+    display: flex;
+    flex-direction: column;
+  }
+  input, textarea{
+    margin-bottom: 10px;
+  }
+}
+
+.form-container__input{
+  padding: 10px;
+  border-radius:  10px;
+  border: none;
+  font-size: @fontSizeCommon;
+  width: 500px;
+
+    &:focus{
+      outline: none;
+      box-shadow: 0px 0px 2px 0px @commonBackground inset;
+    }
+}
+.form-container__add-button{
+  background-color: @commonBackground;
+  color: #fff;
+  font-size: 20px;
+  display: inline-block;
+  vertical-align: bottom;
+  padding: 7px;
+  font-family: @fontFamily;
+  border-radius: 0px 10px 10px 0px;
+
+    &:hover{
+      cursor: pointer;
+      box-shadow: 0px 0px 3px 0px @commonBackground;
+    }
+}
+.common-list{
+  font-size: @fontSizeCommon;
+  background-color: #fff;
+  padding: 30px;
+  margin: 0 auto;
+  border-radius: 10px;
+  max-width: 500px;
+
+    li{
+      list-style: none;
+      padding: 15px;
+      box-shadow: 0px 0px 6px 0px #dadada;
+      font-family: @fontFamily;
+      margin: 15px 0;
+    }
+}
+
+//modificators
+.wrapper{
+  padding: 20px 40px;
+}
+.text-center{
+  text-align: center;
+}
+.blue-background{
+  background-color: @blueBackground ;
+}
+.common-background{
+  background-color: @commonBackground ;
+}
+.margin-bottom10{
+  margin-bottom: 10px;
+}
+.margin-bottom20{
+  margin-bottom: 20px;
+}
+.margin-bottom30{
+  margin-bottom: 30px;
+}
+.none{
+  display: none;
+}
+
+.liked{
+  color: red;
+}
