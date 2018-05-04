@@ -291,6 +291,7 @@ program
     .description('List all TODOs')
     .action(() => {
         getObjJson()
+            .then((obj)=>stringifyData(padrseData(obj)))
             .then(print)
             .catch((e) => {
                 throw e;
