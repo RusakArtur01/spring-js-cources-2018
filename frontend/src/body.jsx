@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {List} from './list';
-import {InputForm} from './imputForm';
+import ToDoForm from './ToDoForm';
 import {data} from './storage';
 
 export class Body extends Component {
@@ -9,7 +9,7 @@ export class Body extends Component {
     super(props);
     this.state = {list: data};
     console.log(this.state);
-    this.showComment = this.showComment.bind(this);
+    this.handleShowComment = this.handleShowComment.bind(this);
     this.handleDone = this.handleDone.bind(this);
     this.handleAddItem = this.handleAddItem.bind(this);
     this.handleLikeItem = this.handleLikeItem.bind(this);
@@ -84,7 +84,7 @@ export class Body extends Component {
     this.setState((prevState) => ({list: list}));
   }
 
-  showComment(id, comment) {
+  handleShowComment(id, comment) {
 
     const {list} = this.state;
 
@@ -103,12 +103,12 @@ export class Body extends Component {
       <section className="main-content blue-background">
         <div className="todo-container wrapper">
           <div className="todo-container-todos">
-            <InputForm
-              handleAddItem={this.handleAddItem}
+            <ToDoForm
+              onTodoSubmit={this.handleAddItem}
             />
             <List
               list={list}
-              showComment={this.showComment}
+              showComment={this.handleShowComment}
               handleLikeItem={this.handleLikeItem}
               handleRemovingItem={this.handleRemovingItem}
               handleDone={this.handleDone}

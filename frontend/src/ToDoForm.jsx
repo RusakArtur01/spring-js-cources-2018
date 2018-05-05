@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-export class InputForm extends Component{
+export default class ToDoForm extends Component{
 
   constructor(props) {
     super(props);
@@ -9,37 +9,30 @@ export class InputForm extends Component{
       description: ''
     };
 
-    this.handleInputItem = this.handleInputItem.bind(this);
-    this.handleSubmitForm = this.handleSubmitForm.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleInputItem(event){
+  handleChange(e){
 
-    const name = event.target.name;
-    const value = event.target.value;
+    const {name, value} = e.target;
 
-    if(name === 'title'){
-      this.setState((prevstate) => ({title: value}));
-    }
-    if(name === 'description'){
-      this.setState((prevstate) => ({description: value}));
-    }
-
-
+    this.setState({...this.state,[name]: value});
   }
 
-  handleSubmitForm(event){
+  handleSubmit(e){
+
+    e.preventDefault();
+
     if(this.state.title !==''){
-      const newItem = this.state;
-      this.props.handleAddItem(newItem);
-
+      this.props.onTodoSubmit({...this.state});
+      this.setState({
+        title: '',
+        description: ''
+      });
     }
 
-    this.setState({
-      title: '',
-      description: ''
-    });
-    event.preventDefault();
+
   }
 
 
@@ -47,18 +40,18 @@ export class InputForm extends Component{
   render(){
     return(
       <div className="add-item-component form-container text-center margin-bottom20">
-        <form onSubmit={this.handleSubmitForm}>
+        <form onSubmit={this.handleSubmit}>
           <input
             className="form-container__input"
             name="title"
-            onChange={this.handleInputItem}
+            onChange={this.handleChange}
             placeholder="Input title..."
             value={this.state.title}
           />
           <textarea
             className="form-container__input"
             name="description"
-            onChange={this.handleInputItem}
+            onChange={this.handleChange}
             placeholder="Input title..."
             value={this.state.description}
           />
