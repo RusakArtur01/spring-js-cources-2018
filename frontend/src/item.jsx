@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {ComponentInput} from './ComponentInput';
+import {ChangeData} from './ChangeData';
 
 export class Item extends Component {
 
@@ -67,7 +67,7 @@ export class Item extends Component {
         </a>
 
         {
-          this.state.visible && <ComponentInput idOfItem={id} sendComment={sendComment}/>
+          this.state.visible && <ChangeData idOfItem={id} sendComment={sendComment}/>
         } {/*if true - show*/}
       </li>
     );
