@@ -30,7 +30,7 @@ export class ChangeData extends Component{
     const { textValue } = this.state;
     if(textValue == '')
       return;
-    this.props.sendComment(this.props.idOfItem, textValue);
+    this.props.sendComment(this.props.todoId, textValue);
     this.setState({textValue: ''});
 
   };

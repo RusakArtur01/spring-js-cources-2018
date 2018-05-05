@@ -1,18 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {Header} from './header'
-import {Body} from "./body";
-import {Footer} from './footer'
+import {App} from "./App";
 
-const App = () => {
+const Web  = () => {
   return(
-    <div>
-      <Header/>
-      <Body/>
-      <Footer/>
-    </div>
+      <App/>
   );
 };
 
-
-ReactDOM.render( <App />, document.getElementById('react-root'));
+ReactDOM.render( <Web />, document.getElementById('react-root'));

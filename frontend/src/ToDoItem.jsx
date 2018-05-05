@@ -1,12 +1,12 @@
 import React, {Component} from 'react';
 import {ChangeData} from './ChangeData';
 
-export class Item extends Component {
+export class ToDoItem extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      visible: false
+      isCommentInputVisible: false
     };
     this.like = this.like.bind(this);
     this.removeItem = this.removeItem.bind(this);
@@ -14,25 +14,24 @@ export class Item extends Component {
   };
 
 
-  addComment(e) {
-    this.setState((prevState) => ({visible: !prevState.visible}));
+  toggleCommentInputVisibility(e) {
     e.preventDefault();
+    this.setState((prevState) => ({isCommentInputVisible: !prevState.isCommentInputVisible}));
   };
 
   like(e) {
-    this.setState((prevState) => ({like: !prevState.like}));
-    this.props.handleLikeItem(this.props.id);
     e.preventDefault();
+    this.props.onLikeToDo(this.props.id);
   }
 
   removeItem(e) {
-    this.props.handleRemovingItem(this.props.id);
     e.preventDefault();
+    this.props.onRemoveToDo(this.props.id);
   }
 
   makeDone(e) {
-    this.props.handleDone(this.props.id);
     e.preventDefault();
+    this.props.onSetReady(this.props.id);
   }
 
   render() {
@@ -44,9 +43,6 @@ export class Item extends Component {
       sendComment
     } = this.props;
     return (
-
-
-
       <li>
         <i className="fas fa-trash-alt" onClick={this.removeItem}/>
         <span className="done" onClick={this.makeDone}>done</span>
@@ -62,12 +58,12 @@ export class Item extends Component {
               <i className="fa fa-heart" onClick={this.like}/>)
         }
 
-        <a href="#" onClick={this.addComment.bind(this)} className="addComment">
-          {this.state.visible ? 'Close input' : 'Add comment'}
+        <a href="#" onClick={this.toggleCommentInputVisibility.bind(this)} className="addComment">
+          {this.state.isCommentInputVisible ? 'Close input' : 'Add comment'}
         </a>
 
         {
-          this.state.visible && <ChangeData idOfItem={id} sendComment={sendComment}/>
+          this.state.isCommentInputVisible && <ChangeData todoId={id} sendComment={sendComment}/>
         } {/*if true - show*/}
       </li>
     );

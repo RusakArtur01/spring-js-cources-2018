@@ -1,7 +1,7 @@
 export const data = (() => {
   let storage = [];
-  if (!localStorage.getItem('list')) {
+  if (!localStorage.getItem('todos')) {
     return storage;
   }
-  return storage = JSON.parse(localStorage.getItem('list'));
+  return storage = JSON.parse(localStorage.getItem('todos'));
 })();
