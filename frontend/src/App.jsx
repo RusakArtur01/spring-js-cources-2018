@@ -3,71 +3,63 @@ import {ToDoList} from './ToDoList';
 import {Header} from './header'
 import {Footer} from './footer'
 import ToDoForm from './ToDoForm';
-import {data} from './storage';
+import ToDoService from './services/ToDoService';
+import ToDoListService from './services/ToDoListService';
 
 export class App extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {todos: data};
-    console.log(this.state);
-    this.handleShowComment = this.handleShowComment.bind(this);
+    this.state = {todos: []};
+
+    this.handleAddComment = this.handleAddComment.bind(this);
     this.handleDone = this.handleDone.bind(this);
     this.handleAddItem = this.handleAddItem.bind(this);
     this.handleLikeItem = this.handleLikeItem.bind(this);
     this.handleRemovingItem = this.handleRemovingItem.bind(this);
   }
 
+  componentWillMount() {
+    this.toDoOperations = new ToDoService();
+    this.toDoListOpreations = new ToDoListService();
+
+    this.toDoListOpreations.getAllToDos()
+      .then((todos) => {
+        this.setState({
+          todos: todos
+        });
+      });
+  }
+
   componentDidUpdate() {
-    const updatedData = JSON.stringify(this.state.todos);
-    localStorage.setItem('todos', updatedData);
+    this.toDoListOpreations.saveTodoList(this.state.todos);
   }
 
   handleAddItem({title, description}) {
 
     const {todos} = this.state;
-
-    const newItem = {
-      id: new Date(),
-      title,
-      description,
-      completed: false,
-      createdDate: new Date(),
-      lastUpdatedDate: new Date(),
-      comments: [],
-      createdByUserId: 1,
-      isLiked: false,
-      lastUpdatedByUserId: 1
-    };
-
-    this.setState(() => ({list: [...todos, newItem]}));
+    const newItem = this.toDoOperations.createToDo(title, description);
+    this.setState(() => ({todos: [...todos, newItem]}));
 
   };
 
   handleRemovingItem(id) {
 
     const {todos} = this.state;
-    const index = todos.findIndex((item) => {
-      return item.id === id;
-    });
+    const index = this.toDoListOpreations.findToDoIndex(todos, id);
+    const newToDo = this.toDoListOpreations.removeToDoItem(todos, index);
 
-    if (index >= 0) {
-      console.log(id);
-      todos.splice(index, 1);
-      this.setState(() => ({list: todos}));
-    }
+    this.setState(() => ({todos: newToDo}));
   }
 
   handleDone(id) {
 
     const {todos} = this.state;
 
-    todos.map((item) => {
-      if (item.id === id) {
-        item.completed = !item.completed;
-      }
-      return item;
-    });
+    const index = this.toDoListOpreations.findToDoIndex(todos, id);
+    todos[index].completed = !todos[index].completed;
+    this.toDoListOpreations.commonUpdatingItem(todos, index, todos[index].completed);
+
 
     this.setState(() => ({todos: todos}));
   }
@@ -76,25 +68,20 @@ export class App extends Component {
 
     const {todos} = this.state;
 
-    todos.map((item) => {
-      if (item.id === id) {
-        item.isLiked = !item.isLiked;
-      }
-      return item;
-    });
+    const index = this.toDoListOpreations.findToDoIndex(todos, id);
+    todos[index].isLiked = !todos[index].isLiked;
+    this.toDoListOpreations.commonUpdatingItem(todos, index, todos[index].isLiked);
 
     this.setState(() => ({todos: todos}));
   }
 
-  handleShowComment(id, comment) {
+  handleAddComment(id, comment) {
 
     const {todos} = this.state;
 
-    todos.map((item) => {
-      if (item.id === id)
-        item.comments.push(comment);
-      return item;
-    });
+    const index = this.toDoListOpreations.findToDoIndex(todos, id);
+    let comments = todos[index].comments.push(comment);
+    this.toDoListOpreations.commonUpdatingItem(todos, index, comments);
 
     this.setState(() => ({todos: todos}));
   }
@@ -112,7 +99,7 @@ export class App extends Component {
               />
               <ToDoList
                 todos={todos}
-                onAddComment={this.handleShowComment}
+                onAddComment={this.handleAddComment}
                 onLikeToDo={this.handleLikeItem}
                 onRemoveToDo={this.handleRemovingItem}
                 onSetReady={this.handleDone}

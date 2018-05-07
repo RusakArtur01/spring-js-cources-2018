@@ -8,6 +8,7 @@ export class ToDoItem extends Component {
     this.state = {
       isCommentInputVisible: false
     };
+
     this.like = this.like.bind(this);
     this.removeItem = this.removeItem.bind(this);
     this.makeDone = this.makeDone.bind(this);
@@ -40,16 +41,20 @@ export class ToDoItem extends Component {
       description,
       comments,
       id,
-      sendComment
+      onAddComment
     } = this.props;
     return (
       <li>
         <i className="fas fa-trash-alt" onClick={this.removeItem}/>
         <span className="done" onClick={this.makeDone}>done</span>
         <p className="title"><span className="title__name">Title:</span> {title}</p>
-        <p className="description">{description != '' && <span className="description__name">Description:</span>}{description}</p>
+        <p className="description">{description != '' &&
+        <span className="description__name">Description:</span>}{description}</p>
         <div className="comments">
-          {comments.map((comment) => <p key={new Date()}><span className="comments__name">Comment(s):</span>{comment}</p>)}
+          {
+            comments &&
+            (<p>Comments</p>, <ul>{comments.map(comment => <li>{comment}</li>)}</ul>)
+          }
         </div>
 
         {
@@ -63,7 +68,7 @@ export class ToDoItem extends Component {
         </a>
 
         {
-          this.state.isCommentInputVisible && <ChangeData todoId={id} sendComment={sendComment}/>
+          this.state.isCommentInputVisible && <ChangeData todoId={id} onAddComment={onAddComment}/>
         } {/*if true - show*/}
       </li>
     );

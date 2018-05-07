@@ -94,9 +94,7 @@ function updateTargetToDo(targetData, changes) {
 }
 
 //add a todoitem in list
-function updateToDoList(currentToDO, obj) {
-    return [...obj, currentToDO];
-}
+
 
 //find the index for target id
 function findToDoIndex(todos, id) {

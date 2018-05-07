@@ -12,9 +12,6 @@ export class ChangeData extends Component{
     };
   }
 
-
-
-
   handleInputComment(e) {
     this.setState({textValue: e.target.value});
   };
@@ -30,13 +27,12 @@ export class ChangeData extends Component{
     const { textValue } = this.state;
     if(textValue == '')
       return;
-    this.props.sendComment(this.props.todoId, textValue);
+    this.props.onAddComment(this.props.todoId, textValue);
     this.setState({textValue: ''});
 
   };
 
   render(){
-
     return(
       <div>
         <textarea

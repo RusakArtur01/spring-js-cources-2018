@@ -5,23 +5,22 @@ import {EmptyList} from './emptyToDoList';
 export const ToDoList = ({todos, onAddComment, onLikeToDo, onRemoveToDo, onSetReady}) => {
 
 
-  let todoList
+  let todoList;
   //checking count of Items
   if (todos.length > 0) {
-    todoList = todos.map((item) => (
-      <ul className="common-list">
-        <ToDoItem
-          {...item}
-          key={item.id}
-          title={item.title}
-          description={item.description}
-          comments={item.comments}
-          onAddComment={onAddComment}
-          onLikeToDo={onLikeToDo}
-          onRemoveToDo={onRemoveToDo}
-          onSetReady={onSetReady}
-        />
-      </ul>
+    todoList =
+      todos.map((item) => (
+      <ToDoItem
+        {...item}
+        key={item.id}
+        title={item.title}
+        description={item.description}
+        comments={item.comments}
+        onAddComment={onAddComment}
+        onLikeToDo={onLikeToDo}
+        onRemoveToDo={onRemoveToDo}
+        onSetReady={onSetReady}
+      />
     ))
   }
   else {
@@ -34,7 +33,7 @@ export const ToDoList = ({todos, onAddComment, onLikeToDo, onRemoveToDo, onSetRe
   return (
     <div className="container__lists">
 
-      {todoList}
+      <ul className="common-list">{todoList}</ul>
       <span className={todos.length > 0 ? '' : 'none'}>All todos: {todos.length}</span>
     </div>
   );
