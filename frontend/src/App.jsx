@@ -1,16 +1,15 @@
-import React, {Component} from 'react';
-import {ToDoList} from './ToDoList';
-import {Header} from './header'
-import {Footer} from './footer'
-import ToDoForm from './ToDoForm';
+import React, { Component } from 'react';
+import { ToDoList } from './components/ToDoList';
+import { Header } from './components/header';
+import { Footer } from './components/footer';
+import ToDoForm from './components/ToDoForm';
 import ToDoService from './services/ToDoService';
 import ToDoListService from './services/ToDoListService';
 
-export class App extends Component {
-
+export default class App extends Component {
   constructor(props) {
     super(props);
-    this.state = {todos: []};
+    this.state = { todos: [] };
 
     this.handleAddComment = this.handleAddComment.bind(this);
     this.handleDone = this.handleDone.bind(this);
@@ -26,7 +25,7 @@ export class App extends Component {
     this.toDoListOpreations.getAllToDos()
       .then((todos) => {
         this.setState({
-          todos: todos
+          todos,
         });
       });
   }
@@ -35,62 +34,56 @@ export class App extends Component {
     this.toDoListOpreations.saveTodoList(this.state.todos);
   }
 
-  handleAddItem({title, description}) {
-
-    const {todos} = this.state;
+  handleAddItem({ title, description }) {
+    const { todos } = this.state;
     const newItem = this.toDoOperations.createToDo(title, description);
-    this.setState(() => ({todos: [...todos, newItem]}));
-
-  };
+    this.setState(() => ({ todos: [...todos, newItem] }));
+  }
 
   handleRemovingItem(id) {
-
-    const {todos} = this.state;
+    const { todos } = this.state;
     const index = this.toDoListOpreations.findToDoIndex(todos, id);
     const newToDo = this.toDoListOpreations.removeToDoItem(todos, index);
 
-    this.setState(() => ({todos: newToDo}));
+    this.setState(() => ({ todos: newToDo }));
   }
 
   handleDone(id) {
-
-    const {todos} = this.state;
+    const { todos } = this.state;
 
     const index = this.toDoListOpreations.findToDoIndex(todos, id);
     todos[index].completed = !todos[index].completed;
     this.toDoListOpreations.commonUpdatingItem(todos, index, todos[index].completed);
 
 
-    this.setState(() => ({todos: todos}));
+    this.setState(() => ({ todos }));
   }
 
   handleLikeItem(id) {
-
-    const {todos} = this.state;
+    const { todos } = this.state;
 
     const index = this.toDoListOpreations.findToDoIndex(todos, id);
     todos[index].isLiked = !todos[index].isLiked;
     this.toDoListOpreations.commonUpdatingItem(todos, index, todos[index].isLiked);
 
-    this.setState(() => ({todos: todos}));
+    this.setState(() => ({ todos }));
   }
 
   handleAddComment(id, comment) {
-
-    const {todos} = this.state;
+    const { todos } = this.state;
 
     const index = this.toDoListOpreations.findToDoIndex(todos, id);
-    let comments = todos[index].comments.push(comment);
+    const comments = todos[index].comments.push(comment);
     this.toDoListOpreations.commonUpdatingItem(todos, index, comments);
 
-    this.setState(() => ({todos: todos}));
+    this.setState(() => ({ todos }));
   }
 
   render() {
-    const {todos} = this.state;
+    const { todos } = this.state;
     return (
       <div>
-        <Header/>
+        <Header />
         <section className="main-content blue-background">
           <div className="todo-container wrapper">
             <div className="todo-container-todos">
@@ -107,7 +100,7 @@ export class App extends Component {
             </div>
           </div>
         </section>
-        <Footer/>
+        <Footer />
       </div>
     );
   }

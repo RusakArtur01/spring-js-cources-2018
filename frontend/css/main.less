@@ -1,5 +1,5 @@
-@commonBackground: #dadada;
-@blueBackground: #eafaff;
+@commonBackground: #abdf9e;
+@bodyBackground: #4d4d4d;
 @wrapperPaddingXL: 0 30px;
 @wrapperPaddingL: 0 20px;
 @wrapperPaddingS: 0 10px;
@@ -9,46 +9,50 @@
 @fontSizeS: 18px;
 @fontSizeCommon: 16px;
 @mediaXL: ~"all and (max-width:979px)";
-@mediaL:  ~"all and (max-width:767px)";
-@mediaS:  ~"all and (max-width:512px)";
+@mediaL: ~"all and (max-width:767px)";
+@mediaS: ~"all and (max-width:512px)";
 
 //
 
 .header-container__title,
-.footer-container__title{
+.footer-container__title {
   font-size: 28px;
   font-family: @fontFamily;
   font-weight: bold;
   color: #fff;
 }
 
-.add-item-component{
+.add-item-component {
   border: 2px solid #dadada;
   border-radius: 5px;
   padding: 10px;
+  max-width: 500px;
+  margin: 0 auto;
 
-  form{
+  form {
     display: flex;
     flex-direction: column;
+    align-items: center;
   }
-  input, textarea{
+  input, textarea {
     margin-bottom: 10px;
   }
 }
 
-.form-container__input{
+.form-container__input {
   padding: 10px;
-  border-radius:  10px;
+  border-radius: 10px;
   border: none;
   font-size: @fontSizeCommon;
   width: 500px;
 
-    &:focus{
-      outline: none;
-      box-shadow: 0px 0px 2px 0px @commonBackground inset;
-    }
+  &:focus {
+    outline: none;
+    box-shadow: 0px 0px 2px 0px @commonBackground inset;
+  }
 }
-.form-container__add-button{
+
+.form-container__add-button {
   background-color: @commonBackground;
   color: #fff;
   font-size: 20px;
@@ -56,14 +60,16 @@
   vertical-align: bottom;
   padding: 7px;
   font-family: @fontFamily;
-  border-radius: 0px 10px 10px 0px;
+  border-radius: 10px;
+  max-width: 300px;
 
-    &:hover{
-      cursor: pointer;
-      box-shadow: 0px 0px 3px 0px @commonBackground;
-    }
+  &:hover {
+    cursor: pointer;
+    box-shadow: 0px 0px 3px 0px @commonBackground;
+  }
 }
-.common-list{
+
+.common-list {
   font-size: @fontSizeCommon;
   background-color: #fff;
   padding: 30px;
@@ -71,41 +77,123 @@
   border-radius: 10px;
   max-width: 500px;
 
-    li{
-      list-style: none;
-      padding: 15px;
-      box-shadow: 0px 0px 6px 0px #dadada;
-      font-family: @fontFamily;
-      margin: 15px 0;
-    }
+  li {
+    list-style: none;
+    padding: 15px;
+    box-shadow: 0px 0px 6px 0px #dadada;
+    font-family: @fontFamily;
+    margin: 15px 0;
+    position: relative;
+  }
+
+  li.ready{
+    background: #f8fffa;
+  }
+
+  li.ready::before{
+    content: 'Completed';
+    color: red;
+    font-size: @fontSizeL;
+  }
+
+  textarea {
+    width: 100%;
+    height: 40px;
+    margin: 10px 0;
+    border-radius: 5px;
+    box-shadow: 0px 0px 6px 0px #dadada;
+    font-family: @fontFamily;
+    padding: 5px;
+  }
+
+  .fa-trash-alt{
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    z-index: 999;
+  }
+
+  .fa-heart{
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+  }
+}
+
+.fa{
+  &:hover{
+    cursor: pointer;
+  }
+}
+
+.description,
+.title{
+  font-style: italic;
+  font-size: @fontSizeL;
+
+}
+
+.title__name{
+  font-weight: 700;
+  font-size: @fontSizeL;
+  font-style: normal;
+  color: #9a9a9a;
+}
+.description__name{
+  font-weight: 700;
+  font-size: @fontSizeS;
+  font-style: normal;
+  margin-right: 3px;
+  color: #9a9a9a;
+}
+
+.done-true{
+  text-decoration: line-through;
 }
 
 //modificators
-.wrapper{
+.wrapper {
   padding: 20px 40px;
 }
-.text-center{
+
+.text-center {
   text-align: center;
 }
-.blue-background{
-  background-color: @blueBackground ;
+
+.blue-background {
+  background-color: @bodyBackground;
 }
-.common-background{
-  background-color: @commonBackground ;
+
+.common-background {
+  background-color: @commonBackground;
 }
-.margin-bottom10{
+
+.margin-bottom10 {
   margin-bottom: 10px;
 }
-.margin-bottom20{
+
+.margin-bottom20 {
   margin-bottom: 20px;
 }
-.margin-bottom30{
+
+.margin-bottom30 {
   margin-bottom: 30px;
 }
-.none{
+
+.none {
   display: none;
 }
 
-.liked{
+.how-much{
+  font-size: @fontSizeXL;
+  color: #fff;
+  font-family: @fontFamily;
+}
+
+.done{
+  cursor: pointer;
+}
+
+.liked {
   color: red;
 }

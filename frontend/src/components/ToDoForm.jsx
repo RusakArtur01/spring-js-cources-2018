@@ -1,44 +1,38 @@
 import React, { Component } from 'react';
 
-export default class ToDoForm extends Component{
-
+export default class ToDoForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
       title: '',
-      description: ''
+      description: '',
     };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleChange(e){
+  handleChange(e) {
+    const { name, value } = e.target;
 
-    const {name, value} = e.target;
-
-    this.setState({...this.state,[name]: value});
+    this.setState({ ...this.state, [name]: value });
   }
 
-  handleSubmit(e){
-
+  handleSubmit(e) {
     e.preventDefault();
 
-    if(this.state.title !==''){
-      this.props.onTodoSubmit({...this.state});
+    if (this.state.title !== '') {
+      this.props.onTodoSubmit({ ...this.state });
       this.setState({
         title: '',
-        description: ''
+        description: '',
       });
     }
-
-
   }
 
 
-
-  render(){
-    return(
+  render() {
+    return (
       <div className="add-item-component form-container text-center margin-bottom20">
         <form onSubmit={this.handleSubmit}>
           <input
@@ -52,7 +46,7 @@ export default class ToDoForm extends Component{
             className="form-container__input"
             name="description"
             onChange={this.handleChange}
-            placeholder="Input title..."
+            placeholder="Input description..."
             value={this.state.description}
           />
           <button className="form-container__add-button" type="submit">Add ToDo</button>

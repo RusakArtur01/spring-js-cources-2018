@@ -1,24 +1,23 @@
-import React, {Component} from 'react';
-import {ChangeData} from './ChangeData';
+import React, { Component } from 'react';
+import { ChangeData } from './ChangeData';
 
 export class ToDoItem extends Component {
-
   constructor(props) {
     super(props);
     this.state = {
-      isCommentInputVisible: false
+      isCommentInputVisible: false,
     };
 
     this.like = this.like.bind(this);
     this.removeItem = this.removeItem.bind(this);
     this.makeDone = this.makeDone.bind(this);
-  };
+  }
 
 
   toggleCommentInputVisibility(e) {
     e.preventDefault();
-    this.setState((prevState) => ({isCommentInputVisible: !prevState.isCommentInputVisible}));
-  };
+    this.setState(prevState => ({ isCommentInputVisible: !prevState.isCommentInputVisible }));
+  }
 
   like(e) {
     e.preventDefault();
@@ -41,15 +40,17 @@ export class ToDoItem extends Component {
       description,
       comments,
       id,
-      onAddComment
+      onAddComment,
+      isLiked,
+      completed,
     } = this.props;
     return (
-      <li>
-        <i className="fas fa-trash-alt" onClick={this.removeItem}/>
-        <span className="done" onClick={this.makeDone}>done</span>
+      <li className={completed ? 'ready' : 'in-progress'}>
+        <i className="fa fa-trash-alt" onClick={this.removeItem} />
         <p className="title"><span className="title__name">Title:</span> {title}</p>
         <p className="description">{description != '' &&
-        <span className="description__name">Description:</span>}{description}</p>
+        <span className="description__name">Description:</span>}{description}
+        </p>
         <div className="comments">
           {
             comments &&
@@ -58,9 +59,9 @@ export class ToDoItem extends Component {
         </div>
 
         {
-          this.props.isLiked ?
-            (<i className="fa fa-heart liked" onClick={this.like}/>) : (
-              <i className="fa fa-heart" onClick={this.like}/>)
+          isLiked ?
+            (<i className="fa fa-heart liked" onClick={this.like} />) : (
+              <i className="fa fa-heart" onClick={this.like} />)
         }
 
         <a href="#" onClick={this.toggleCommentInputVisibility.bind(this)} className="addComment">
@@ -68,8 +69,10 @@ export class ToDoItem extends Component {
         </a>
 
         {
-          this.state.isCommentInputVisible && <ChangeData todoId={id} onAddComment={onAddComment}/>
-        } {/*if true - show*/}
+          this.state.isCommentInputVisible && <ChangeData todoId={id} onAddComment={onAddComment} />
+        } {/* if true - show */}
+
+        {completed ? (<p className="done done-true" onClick={this.makeDone}>Done</p>) : (<p className="done" onClick={this.makeDone}>Done</p>)}
       </li>
     );
   }
