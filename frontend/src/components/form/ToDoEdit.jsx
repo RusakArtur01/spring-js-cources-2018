@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-export class ChangeData extends Component {
+export default class ToDoEdit extends Component {
   constructor(props) {
     super(props);
     this.handleInputComment = this.handleInputComment.bind(this);

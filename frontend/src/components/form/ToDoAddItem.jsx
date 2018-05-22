@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-export default class ToDoForm extends Component {
+export default class ToDoAddItem extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -14,15 +14,13 @@ export default class ToDoForm extends Component {
 
   handleChange(e) {
     const { name, value } = e.target;
-
     this.setState({ ...this.state, [name]: value });
   }
 
   handleSubmit(e) {
     e.preventDefault();
-
     if (this.state.title !== '') {
-      this.props.onTodoSubmit({ ...this.state });
+      this.props.onTodoSubmit(this.state);
       this.setState({
         title: '',
         description: '',

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { ChangeData } from './ChangeData';
+import ToDoEdit from '../form/ToDoEdit';
 
-export class ToDoItem extends Component {
+export default class ToDoItem extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -31,7 +31,7 @@ export class ToDoItem extends Component {
 
   makeDone(e) {
     e.preventDefault();
-    this.props.onSetReady(this.props.id);
+    this.props.onComplete(this.props.id);
   }
 
   render() {
@@ -42,7 +42,7 @@ export class ToDoItem extends Component {
       id,
       onAddComment,
       isLiked,
-      completed,
+      completed
     } = this.props;
     return (
       <li className={completed ? 'ready' : 'in-progress'}>
@@ -69,7 +69,7 @@ export class ToDoItem extends Component {
         </a>
 
         {
-          this.state.isCommentInputVisible && <ChangeData todoId={id} onAddComment={onAddComment} />
+          this.state.isCommentInputVisible && <ToDoEdit todoId={id} onAddComment={onAddComment} />
         } {/* if true - show */}
 
         {completed ? (<p className="done done-true" onClick={this.makeDone}>Done</p>) : (<p className="done" onClick={this.makeDone}>Done</p>)}
