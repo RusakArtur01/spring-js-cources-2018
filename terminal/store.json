@@ -1,0 +1,26 @@
+{
+  "todos": [
+    {
+      "id": "a6bec42a-99d7-b733-53f7-68595067da4e",
+      "createdByUserId": 1,
+      "lastUpdatedByUserId": 1,
+      "createdDate": "2018-04-02T15:53:56.320Z",
+      "lastUpdatedDate": "2018-04-02T16:01:45.478Z",
+      "title": "test",
+      "description": "terwrrwrw",
+      "comment": null,
+      "liked": false
+    },
+    {
+      "id": "9d64178b-07e9-aa3b-e014-cd993f07afc6",
+      "createdByUserId": 1,
+      "lastUpdatedByUserId": 1,
+      "createdDate": "2018-04-02T18:05:12.325Z",
+      "lastUpdatedDate": "2018-04-02T18:05:12.325Z",
+      "title": "Throw away rubbish",
+      "description": "tomottow",
+      "comment": null,
+      "liked": false
+    }
+  ]
+}

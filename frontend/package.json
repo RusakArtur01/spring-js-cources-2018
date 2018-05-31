@@ -1,0 +1,49 @@
+{
+  "name": "web",
+  "version": "1.0.0",
+  "description": "react",
+  "main": "index.js",
+  "scripts": {
+    "start": "webpack-dev-server --",
+    "build": "webpack",
+    "watch": "npm run build -- --watch",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RusakArtur01/spring-js-cources-2018.git"
+  },
+  "keywords": [
+    "WebApp"
+  ],
+  "author": "ArturR",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/RusakArtur01/spring-js-cources-2018/issues"
+  },
+  "homepage": "https://github.com/RusakArtur01/spring-js-cources-2018#readme",
+  "dependencies": {
+    "react": "16.3.1",
+    "react-dom": "16.3.1",
+    "redux": "^3.7.2"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.4",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-react": "^6.24.1",
+    "css-loader": "^0.28.10",
+    "eslint": "^4.19.1",
+    "eslint-config-airbnb": "^16.1.0",
+    "eslint-loader": "^2.0.0",
+    "eslint-plugin-import": "^2.10.0",
+    "eslint-plugin-jsx-a11y": "^6.0.3",
+    "eslint-plugin-react": "^7.7.0",
+    "jest": "^22.4.3",
+    "style-loader": "^0.20.3",
+    "webpack": "4.1.1",
+    "webpack-cli": "^2.0.11",
+    "webpack-dev-server": "^3.1.1"
+  }
+}

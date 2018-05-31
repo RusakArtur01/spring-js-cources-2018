@@ -1,5 +1,5 @@
-import randomId from '../../../../server/utils';
-export default class ToDoService {
+const randomId = require('../utils');
+module.exports = class ToDoService {
   createTodo(data) {
     const now = new Date();
     return {

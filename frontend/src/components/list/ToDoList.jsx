@@ -54,6 +54,10 @@ export default class ToDoList extends Component {
       });});
   }
 
+  /**
+   * @param {string] item id
+   * return {void}
+   * **/
   handleRemoveItem(id) {
     const {todos} = this.state;
 
@@ -64,80 +68,71 @@ export default class ToDoList extends Component {
       });});
   }
 
+  /**
+   * @param {string] item id
+   * return {void}
+   * **/
   handleComplete(id) {
     const {todos} = this.state;
-    const index = this.toDoListService.findIndexByiD(todos, id);
 
+    const index = this.toDoListService.findIndexByiD(todos, id);
     todos[index].completed = !todos[index].completed;
 
     this.toDoListService
-      .updateItem(todos, id)
+      .updateItem(todos, index)
       .then( todos => { this.setState({
         todos
       });});
   }
 
+  /**
+   * @param {string] item id
+   * return {void}
+   * **/
   handleLikeItem(id) {
     const {todos} = this.state;
 
-    const index = this.ToDoListService.findToDoIndex(todos, id);
+    const index = this.toDoListService.findIndexByiD(todos, id);
     todos[index].isLiked = !todos[index].isLiked;
-    this.ToDoListService.commonUpdatingItem(todos, index, todos[index].isLiked);
+
+    this.toDoListService
+      .updateItem(todos, index);
 
     this.setState(() => ({todos}));
   }
 
+  /**
+   * @param {string] item id
+   * @param {string} comment
+   * return {void}
+   * **/
   handleAddComment(id, comment) {
     const {todos} = this.state;
 
-    const index = this.ToDoListService.findToDoIndex(todos, id);
-    const comments = todos[index].comments.push(comment);
-    this.ToDoListService.commonUpdatingItem(todos, index, comments);
+    const index = this.toDoListService.findIndexByiD(todos, id);
+    const comments = todos[index].comment.push(comment);
+
+    this.toDoListService.updateItem(todos, index, comments);
 
     this.setState(() => ({todos}));
   }
 
-  /*
-    if(this.props.todos > 0) {
-    todoList =
-      todos.map(item => (
-        <div>
-          <ToDoAddItem
-            onTodoSubmit={this.handleAddItem}
-          />
-          <ToDoItem
-            {...item}
-            key={item.id}
-            title={item.title}
-            description={item.description}
-            comments={item.comments}
-            onAddComment={onAddComment}
-            onLikeToDo={onLikeToDo}
-            onRemoveToDo={onRemoveToDo}
-            onSetReady={onSetReady}
-          />
-        </div>
-      ));
-  }
-  else
-  {
-    todoList =
-      (<ToDoEmpty
-        title="The list is empty."
-      />);
-  }*/
   render() {
     const items = this.state.todos;
 
     if (!items || !items.length) {
-      return (<ToDoEmpty title={'Empty list'}/>);
+      return (
+        <div className="container__lists">
+          <ToDoAddItem onTodoSubmit={this.handleAddItem}/>
+          <ToDoEmpty title={'Empty list'}/>
+        </div>
+      );
     }
     return (
       <div className="container__lists">
         <ToDoAddItem
           onTodoSubmit={this.handleAddItem}
         />
-
         <ul className="common-list">
           {items.map((item, index) => (
             <ToDoItem
@@ -145,9 +140,11 @@ export default class ToDoList extends Component {
               key={item.id}
               title={item.title}
               description={item.description}
-              comments={item.comments}
+              comments={item.comment}
+              onLikeToDo={this.handleLikeItem}
               onComplete={this.handleComplete}
               onRemoveToDo={this.handleRemoveItem}
+              onAddComment={this.handleAddComment}
             />
           ))}
         </ul>

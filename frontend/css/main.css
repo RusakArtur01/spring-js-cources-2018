@@ -1,0 +1,163 @@
+.header-container__title,
+.footer-container__title {
+  font-size: 28px;
+  font-family: Arial;
+  font-weight: bold;
+  color: #fff;
+}
+.add-item-component {
+  border: 2px solid #dadada;
+  border-radius: 5px;
+  padding: 10px;
+  max-width: 500px;
+  margin: 0 auto;
+}
+.add-item-component form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.add-item-component input,
+.add-item-component textarea {
+  margin-bottom: 10px;
+}
+.form-container__input {
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  font-size: 16px;
+  width: 500px;
+}
+.form-container__input:focus {
+  outline: none;
+  box-shadow: 0px 0px 2px 0px #abdf9e inset;
+}
+.form-container__add-button {
+  background-color: #abdf9e;
+  color: #fff;
+  font-size: 20px;
+  display: inline-block;
+  vertical-align: bottom;
+  padding: 7px;
+  font-family: Arial;
+  border-radius: 10px;
+  max-width: 300px;
+}
+.form-container__add-button:hover {
+  cursor: pointer;
+  box-shadow: 0px 0px 3px 0px #abdf9e;
+}
+.common-list {
+  font-size: 16px;
+  background-color: #fff;
+  padding: 30px;
+  margin: 0 auto;
+  border-radius: 10px;
+  max-width: 500px;
+}
+.common-list li {
+  list-style: none;
+  padding: 15px;
+  box-shadow: 0px 0px 6px 0px #dadada;
+  font-family: Arial;
+  margin: 15px 0;
+  position: relative;
+}
+.common-list li.ready {
+  background: #f8fffa;
+}
+.common-list li.ready::before {
+  content: 'Completed';
+  color: red;
+  font-size: 20px;
+}
+.common-list textarea {
+  width: 100%;
+  height: 40px;
+  margin: 10px 0;
+  border-radius: 5px;
+  box-shadow: 0px 0px 6px 0px #dadada;
+  font-family: Arial;
+  padding: 5px;
+}
+.common-list .fa-trash-alt {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  z-index: 999;
+}
+.common-list .fa-heart {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+}
+#react-root {
+  display: flex;
+  justify-content: space-between;
+  height: 100%;
+}
+#react-root > div:first-child {
+  width: 100%;
+}
+.comments ul li {
+  padding: 5px;
+}
+.fa:hover {
+  cursor: pointer;
+}
+.description,
+.title {
+  font-style: italic;
+  font-size: 20px;
+}
+.title__name {
+  font-weight: 700;
+  font-size: 20px;
+  font-style: normal;
+  color: #9a9a9a;
+}
+.description__name {
+  font-weight: 700;
+  font-size: 18px;
+  font-style: normal;
+  margin-right: 3px;
+  color: #9a9a9a;
+}
+.done-true {
+  text-decoration: line-through;
+}
+.wrapper {
+  padding: 20px 40px;
+}
+.text-center {
+  text-align: center;
+}
+.blue-background {
+  background-color: #4d4d4d;
+}
+.common-background {
+  background-color: #abdf9e;
+}
+.margin-bottom10 {
+  margin-bottom: 10px;
+}
+.margin-bottom20 {
+  margin-bottom: 20px;
+}
+.margin-bottom30 {
+  margin-bottom: 30px;
+}
+.none {
+  display: none;
+}
+.how-much {
+  font-size: 22px;
+  color: #fff;
+  font-family: Arial;
+}
+.done {
+  cursor: pointer;
+}
+.liked {
+  color: red;
+}
